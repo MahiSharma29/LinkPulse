@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · LinkPulse{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Shorten a link</h1>
+  <form method="post" class="row">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label class="grow">Web address
+      <input type="text" name="url" placeholder="https://example.com/a/very/long/page" required></label>
+    <label>Custom name <small>(optional)</small>
+      <input type="text" name="alias" placeholder="summer-sale" maxlength="32"></label>
+    <button class="btn" type="submit">Shorten</button>
+  </form>
+</section>
+
+<section>
+  <h2>Your links <span class="muted">{{ rows|length }} links · {{ total_clicks }} clicks</span></h2>
+  {% if not rows %}
+    <p class="empty">No links yet. Paste an address above to create your first short link.</p>
+  {% else %}
+  <ul class="links">
+    {% for link, count in rows %}
+    <li>
+      <div class="grow">
+        <a class="short" href="{{ url_for('links.follow', code=link.code) }}" target="_blank" rel="noopener">{{ request.host }}/{{ link.code }}</a>
+        <div class="target" title="{{ link.target_url }}">{{ link.target_url }}</div>
+      </div>
+      <div class="count"><strong>{{ count }}</strong> clicks</div>
+      <a class="btn ghost small" href="{{ url_for('links.stats', link_id=link.id) }}">Stats</a>
+      <form method="post" action="{{ url_for('links.delete', link_id=link.id) }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn danger small" type="submit">Delete</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endblock %}

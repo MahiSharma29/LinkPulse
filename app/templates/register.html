@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Create account · LinkPulse{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Create your account</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Email <input type="email" name="email" required autocomplete="email" autofocus></label>
+    <label>Password <input type="password" name="password" required minlength="8" autocomplete="new-password">
+      <small>At least 8 characters.</small></label>
+    <button class="btn" type="submit">Create account</button>
+  </form>
+  <p class="muted">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</section>
+{% endblock %}
